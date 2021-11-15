@@ -1944,18 +1944,18 @@ class Flask(_PackageBoundObject):
         .. versionadded:: 0.7
         """
         thread_name = threading.currentThread().getName()
-        print(f"{thread_name}: calling try_trigger_before_first_request_functions")
+        print(f"{thread_name}: calling try_trigger_before_first_request_functions", flush=True)
         self.try_trigger_before_first_request_functions()
         try:
-            print(f"{thread_name}: calling preprocess_request")
+            print(f"{thread_name}: calling preprocess_request", flush=True)
             request_started.send(self)
             rv = self.preprocess_request()
             if rv is None:
-                print(f"{thread_name}: calling dispatch_request")
+                print(f"{thread_name}: calling dispatch_request", flush=True)
                 rv = self.dispatch_request()
         except Exception as e:
             rv = self.handle_user_exception(e)
-        print(f"{thread_name}: calling finalize_request")
+        print(f"{thread_name}: calling finalize_request", flush=True)
         return self.finalize_request(rv)
 
     def finalize_request(self, rv, from_error_handler=False):
@@ -2446,14 +2446,14 @@ class Flask(_PackageBoundObject):
             start the response.
         """
         thread_name = threading.currentThread().getName()
-        print(f"{thread_name}: Creating request_context")
+        print(f"{thread_name}: Creating request_context", flush=True)
         ctx = self.request_context(environ)
         error = None
         try:
             try:
-                print(f"{thread_name}: Pushing request_context")
+                print(f"{thread_name}: Pushing request_context", flush=True)
                 ctx.push()
-                print(f"{thread_name}: Calling dispatch")
+                print(f"{thread_name}: Calling dispatch", flush=True)
                 response = self.full_dispatch_request()
             except Exception as e:
                 error = e
@@ -2463,7 +2463,7 @@ class Flask(_PackageBoundObject):
                 raise
             return response(environ, start_response)
         finally:
-            print(f"{thread_name}: wsgi_app finally")
+            print(f"{thread_name}: wsgi_app finally", flush=True)
             if self.should_ignore_error(error):
                 error = None
             ctx.auto_pop(error)
